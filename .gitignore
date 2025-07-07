@@ -1,41 +1,16 @@
-# Large Files - Models
-models/*.pth
-models/*.pt
-models/*.onnx
-models/*.h5
-
-# Large Files - Images  
-data/output_tile_*.tif
-data/angle_data/*.JPG
-data/angle_data/*.jpg
-data/angle_data/*.jpeg
-*.tiff
-*.tif
-*.JPG
-*.jpg
-*.jpeg
-*.png
-
+cat > .gitignore << 'EOF'
 # Python Cache
 __pycache__/
 *.pyc
 *.pyo
-*.pyd
 
-# Environment
+# Environment  
 venv/
 env/
-.env
 
 # Temporary Files
 temp_image.*
 *.tmp
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
 
 # OS
 .DS_Store
@@ -43,3 +18,4 @@ Thumbs.db
 
 # Streamlit
 .streamlit/
+EOF
