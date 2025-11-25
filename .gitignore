@@ -7,7 +7,9 @@ __pycache__/
 # Environment  
 venv/
 env/
-
+showroom-demo/node_modules/
+showroom-demo/.idea/
+.idea/
 # Temporary Files
 temp_image.*
 *.tmp
