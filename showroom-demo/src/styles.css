@@ -1,0 +1,15 @@
+/* You can add global styles to this file, and also import other style files */
+@import '../node_modules/@syncfusion/ej2-base/styles/tailwind.css';
+@import '../node_modules/@syncfusion/ej2-layouts/styles/tailwind.css';
+@import '../node_modules/@syncfusion/ej2-angular-grids/styles/tailwind.css';
+@import '../node_modules/@syncfusion/ej2-icons/styles/tailwind.css';
+@import '../node_modules/@syncfusion/ej2-angular-buttons/styles/tailwind.css';
+@import "../node_modules/@syncfusion/ej2-angular-lists/styles/tailwind.css";
+@import "../node_modules/@syncfusion/ej2-inputs/styles/tailwind.css";
+@import "../node_modules/@syncfusion/ej2-popups/styles/tailwind.css";
+@import "../node_modules/@syncfusion/ej2-splitbuttons/styles/tailwind.css";
+@import "../node_modules/@syncfusion/ej2-navigations/styles/tailwind.css";
+@import "../node_modules/@syncfusion/ej2-pdfviewer/styles/tailwind.css";
+@import "../node_modules/@syncfusion/ej2-dropdowns/styles/tailwind.css";
+@import "../node_modules/@syncfusion/ej2-notifications/styles/tailwind.css";
+@import "tailwindcss";

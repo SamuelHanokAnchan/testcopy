@@ -1,0 +1,5 @@
+.cards-container { display: flex; flex-direction: column; gap: 1rem; }
+.cards-list { display: flex; flex-direction: column; gap: .75rem; }
+.e-card { border-radius: 8px; }
+.e-card-header { display: flex; justify-content: space-between; align-items: center; }
+.e-card-content { white-space: pre-wrap; }

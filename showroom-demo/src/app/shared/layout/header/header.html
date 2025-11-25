@@ -1,0 +1,17 @@
+<header class="border-b bg-white dark:bg-gray-900">
+  <div class="container mx-auto px-4 py-4 flex items-center justify-between gap-4">
+    <h1 class="text-2xl font-bold cursor-pointer select-none transition-colors text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-sm" (click)="goHome()" (keydown.enter)="goHome()" (keydown.space)="goHome(); $event.preventDefault()" role="button" aria-label="Zur Startseite" tabindex="0">
+      <span class="md:hidden">Showroom</span>
+      <span class="hidden md:inline">A/D Evolution AI-Showroom Demo</span>
+    </h1>
+
+    <div class="flex items-center gap-2">
+      <button class="px-4 py-2 rounded bg-gray-200 text-gray-800 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600" (click)="goHome()" aria-label="Home">
+        Home
+      </button>
+      <button class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700" (click)="goToRating()" aria-label="Bewertung starten">
+        Bewerten
+      </button>
+    </div>
+  </div>
+</header>

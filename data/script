@@ -1,0 +1,2 @@
+for i in $(seq 8 16);
+do magick output_tile_$i.tif output_tile_$i.png; done

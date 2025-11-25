@@ -1,0 +1,39 @@
+/* Styles already loaded globally from src/styles.css for Syncfusion. Local import removed. */
+
+.material-calculator {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+#canvasContainer {
+  width: 90%;
+  height: 90%;
+  overflow: auto;
+  border: 1px solid;
+}
+
+/* Auf mobilen Geräten Liste unter dem Bild anzeigen */
+@media (max-width: 768px) {
+  .material-calculator {
+    flex-direction: column; /* stapelt Bild (oben) und Gebiete (unten) */
+  }
+
+  .material-calculator > div {
+    width: 100%;
+  }
+
+  #canvasContainer {
+    width: 100%;
+  }
+}
+
+/* Hover Overlay für Info neben "Manuelle Auswahl" */
+.info-wrapper:hover .info-overlay {
+  display: block;
+}
+
+.info-overlay ejs-message {
+  display: block;
+}

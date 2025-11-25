@@ -1,0 +1,72 @@
+<div>
+  <p>Ausgewählte Gebiete: {{ areas.length }}</p>
+  <div class="cards-container">
+    <div class="cards-list">
+      @for (area of this.areas; track area.id) {
+        <div class="e-card" (click)="onSelectArea(area)" [style.border-color]="area.color">
+          <div class="e-card-header">
+            <div class="e-card-header-caption">
+              <input class="e-card-header-title" [defaultValue]="area.name" (input)="onAreaNameChange($event, area)"
+                     type="text"/>
+              <div>Größe: {{ area.size.toFixed(2) }}&#13217;</div>
+              <div>Kosten: {{ calculateCost(area).toFixed(2) }}&#8364;</div>
+              <div>
+                <button ejs-button cssClass="e-danger e-small" (click)="deleteArea(area)">Gebiet Löschen</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="e-card-content">
+            @if (isAreaSelected(area)) {
+              Schichten:
+              <button ejs-button cssClass="e-small" (click)="addLayer(area)">Neue Schicht</button>
+              <div class="cards-container">
+                <div class="cards-list">
+                  @for (layer of area.layers; track layer.name) {
+                    <div class="e-card">
+                      <div class="e-card-header">
+                        <div class="e-card-header-caption">
+                          <input class="e-card-header-title" [defaultValue]="layer.name"
+                                 (input)="onLayerNameChange($event, area, layer)" type="text"/>
+                        </div>
+                        <button ejs-button cssClass="e-danger e-small" (click)="deleteLayer(area, layer)">Löschen
+                        </button>
+                      </div>
+                      <div class="e-card-content">
+                        <ejs-dropdownlist id='layerTypes' [value]="layer.material" [dataSource]='materials'
+                                          [allowObjectBinding]='true'
+                                          (filtering)='onFiltering($event)' [filterBarPlaceholder]="filterPlaceholder"
+                                          [allowFiltering]='true' [debounceDelay]='debounceDelay'
+                                          (change)='onLayerTypeDropdownChange($event, layer)' [fields]='fields'
+                                          [placeholder]='waterMark' [popupHeight]='height'></ejs-dropdownlist>
+                        <div>
+                          Preis: {{ layer.material?.price }} {{ layer.material?.unit }}
+                        </div>
+                        @if (layer.material?.unit !== MaterialUnit.EURO_PER_METER && layer.material?.unit !== MaterialUnit.EURO_PER_SQUARE_METER) {
+                          <div>
+                            Tiefe (cm): <input
+                            [defaultValue]="layer.depth * 100"
+                            (input)="onLayerDepthChange($event, area, layer)" type="number"/>
+                          </div>
+                        }
+                        <div>
+                          Kosten: {{ calculateLayerCost(area, layer).toFixed(2) }}&#8364;
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            } @else if (area.layers.length > 0) {
+              Schichten: Klick zum Ausklappen
+              <button ejs-button cssClass="e-small" (click)="addLayer(area)">Neue Schicht</button>
+            } @else {
+              Schichten:
+              <button ejs-button cssClass="e-small" (click)="addLayer(area)">Neue Schicht</button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

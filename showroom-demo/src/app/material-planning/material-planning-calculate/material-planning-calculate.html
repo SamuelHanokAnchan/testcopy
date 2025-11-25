@@ -1,0 +1,54 @@
+<div class="material-calculator">
+  <div>
+    <div>
+      <button (click)="setSelectionMode(AreaMode.SMART)" class="e-btn e-outline e-primary" id="button_smart">
+        <span class="e-size">Intelligente Auswahl</span>
+      </button>
+      <span style="position: relative; display: inline-flex; align-items: center; gap: 6px;">
+        <button (click)="setSelectionMode(AreaMode.MANUAL)" class="e-btn e-outline e-primary" id="button_manual">
+          <span class="e-size">Manuelle Auswahl</span>
+        </button>
+        <span class="info-wrapper"
+              style="display:inline-flex; align-items:center; position:relative;">
+          <span aria-label="Hinweis" class="e-icons e-info" style="font-size:18px; color:#2563eb; cursor:default;"
+                title="Hinweis">
+          </span>
+          <div class="info-overlay"
+               style="display:none; position:absolute; z-index:50; top:125%; left:0; width:min(92vw, 420px);">
+            <ejs-message cssClass="shadow-lg" id="manualHint" severity="Info">
+              <ng-template #content>
+                Dies sind nur beispielhafte Materialpreise, diese können an die genauen Angebote des entsprechenden
+                Betriebs angepasst werden. Zusätzlich sind sie exklusive Personalkosten; das kann aber ebenfalls
+                problemlos berücksichtigt werden.
+              </ng-template>
+            </ejs-message>
+          </div>
+        </span>
+      </span>
+      <!--<button (click)="setSelectionMode(AreaMode.CONTINUOUS)" class="e-btn e-outline e-primary" id="button_continuous">
+        <span class="e-size">Fließender Modus</span>
+      </button>-->
+    </div>
+    <button (click)="deletePointsClick()"
+            [disabled]="(areaSelectionMode === AreaMode.SMART || areaSelectionMode === AreaMode.UNSELECTED || this.clickedPoints.length === 0)"
+            class="e-btn e-outline e-primary">
+      <span class="e-size">Punkte löschen</span>
+    </button>
+    <!--<button (click)="finishArea()" class="e-btn e-outline e-primary">
+      <span class="e-size">Gebiet abschließen</span>
+    </button>-->
+    <div id="canvasContainer">
+      <canvas (click)="onCanvasClick($event)" height="300" style="background: grey" width="400"></canvas>
+    </div>
+    <div style="margin-top:12px">
+      <button (click)="exportPdf()" class="e-btn e-primary">
+        <span class="e-size">PDF erstellen</span>
+      </button>
+    </div>
+  </div>
+  <div>
+    <app-area-list (areasUpdated)="onAreasUpdated()" (selectedAreaChange)="onSelectedAreaChange($event)"
+                   [(selectedArea)]="selectedArea"
+                   [areas]="areas"></app-area-list>
+  </div>
+</div>

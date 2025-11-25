@@ -1,0 +1,9 @@
+<ejs-listview cssClass="picture-list" [dataSource]="images()" [showHeader]="false">
+	<ng-template #template let-src>
+	<div class="e-card img-card" (click)="onImageClick(src)">
+			<div class="e-card-content img-wrapper">
+				<img [ngSrc]="src" width="250" height="250" alt="" priority />
+			</div>
+		</div>
+	</ng-template>
+</ejs-listview>

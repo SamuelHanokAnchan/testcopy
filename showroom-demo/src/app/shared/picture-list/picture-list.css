@@ -1,0 +1,15 @@
+:host { display: block; }
+
+/* Make Syncfusion ListView lay out items side-by-side (full size) and wrap */
+
+.picture-list .e-list-item {
+  padding: 0;
+  border: none;
+  background: transparent;
+  width: auto !important; /* override default full-width list item */
+  display: inline-block;
+}
+
+.img-wrapper {
+  padding: 0; /* remove default spacing so image fills card */
+}
