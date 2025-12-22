@@ -1,39 +1,295 @@
-/* Styles already loaded globally from src/styles.css for Syncfusion. Local import removed. */
+/* Material Planning Calculator - Professional Styling */
+/* No HTML structure changes - only CSS beautification */
+
+* {
+  box-sizing: border-box;
+}
 
 .material-calculator {
   display: flex;
   flex-direction: row;
-  gap: 16px;
+  gap: 24px;
   align-items: flex-start;
+  padding: 24px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 }
 
+.material-calculator > div:first-child {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.material-calculator > div:last-child {
+  width: 340px;
+  flex-shrink: 0;
+}
+
+/* Control buttons section */
+.material-calculator > div:first-child > div:first-child {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  padding: 16px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+}
+
+/* Button styling */
+.e-btn {
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+  transition: all 0.2s ease;
+  border: 2px solid #cbd5e1;
+  background: white;
+  color: #334155;
+  cursor: pointer;
+}
+
+.e-btn:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  transform: translateY(-1px);
+}
+
+.e-btn.e-primary {
+  background: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+
+.e-btn.e-primary:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.e-btn.e-outline {
+  background: white;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+
+.e-btn.e-outline:hover {
+  background: #042d56;
+  border-color: #94a3b8;
+}
+
+.e-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Delete Points button */
+.material-calculator > div:first-child > button {
+  margin-left: auto;
+  background: #dc2626 !important;
+  border-color: #dc2626 !important;
+  color: white;
+}
+
+.material-calculator > div:first-child > button:hover:not(:disabled) {
+  background: #b91c1c !important;
+  border-color: #b91c1c !important;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+}
+
+/* Canvas container styling */
 #canvasContainer {
-  width: 90%;
-  height: 90%;
+  width: 100%;
+  height: auto;
   overflow: auto;
-  border: 1px solid;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  background: white;
+  padding: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
-/* Auf mobilen Geräten Liste unter dem Bild anzeigen */
-@media (max-width: 768px) {
+#canvasContainer canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  cursor: crosshair;
+}
+
+/* Export PDF button section */
+.material-calculator > div:first-child > div:last-child {
+  display: flex;
+  gap: 12px;
+}
+
+.material-calculator > div:first-child > div:last-child button {
+  flex: 1;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  border: none !important;
+  color: white;
+  padding: 12px 16px !important;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.material-calculator > div:first-child > div:last-child button:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+  transform: translateY(-1px);
+}
+
+/* Info icon and tooltip */
+.info-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.info-wrapper .e-icons {
+  font-size: 18px !important;
+  color: #2563eb !important;
+  cursor: help !important;
+  transition: all 0.2s ease;
+}
+
+.info-wrapper .e-icons:hover {
+  color: #1d4ed8 !important;
+  transform: scale(1.1);
+}
+
+.info-overlay {
+  display: none !important;
+  position: absolute;
+  z-index: 50;
+  top: 125%;
+  left: 0;
+  width: min(92vw, 420px);
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.info-wrapper:hover .info-overlay {
+  display: block !important;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.info-overlay ejs-message {
+  display: block !important;
+  border-radius: 8px;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
   .material-calculator {
-    flex-direction: column; /* stapelt Bild (oben) und Gebiete (unten) */
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
   }
 
-  .material-calculator > div {
+  .material-calculator > div:last-child {
+    width: 100%;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  #canvasContainer {
+    min-height: 350px;
+  }
+}
+
+@media (max-width: 768px) {
+  .material-calculator {
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .material-calculator > div:first-child > div:first-child {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px;
+  }
+
+  .material-calculator > div:first-child > button {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .e-btn {
     width: 100%;
   }
 
   #canvasContainer {
-    width: 100%;
+    padding: 8px;
+    min-height: 280px;
+  }
+
+  .material-calculator > div:last-child {
+    max-height: 300px;
   }
 }
 
-/* Hover Overlay für Info neben "Manuelle Auswahl" */
-.info-wrapper:hover .info-overlay {
-  display: block;
+/* Scrollbar styling */
+#canvasContainer::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-.info-overlay ejs-message {
-  display: block;
+#canvasContainer::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+#canvasContainer::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+#canvasContainer::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Focus states for accessibility */
+.e-btn:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* Smooth transitions */
+.material-calculator > div:first-child {
+  transition: all 0.3s ease;
+}
+
+/* Print styling */
+@media print {
+  .material-calculator > div:first-child > div:first-child,
+  .material-calculator > div:first-child > button,
+  .material-calculator > div:first-child > div:last-child {
+    display: none;
+  }
+
+  #canvasContainer {
+    border: 1px solid #000;
+    box-shadow: none;
+  }
 }
