@@ -311,7 +311,7 @@ export class MaterialPlanningCalculate implements OnInit {
 
   private addArea(size: number, polygon: PolygonModel) {
     const lastArea = this.areas[this.areas.length - 1];
-    let areaId = 0;
+    let areaId = 1;
     if (lastArea) {
       areaId = lastArea.id + 1;
     }
