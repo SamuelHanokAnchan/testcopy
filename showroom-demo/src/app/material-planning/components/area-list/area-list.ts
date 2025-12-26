@@ -8,6 +8,7 @@ import {MaterialDto, MaterialUnit} from '../../model/material.dto';
 
 @Component({
   selector: 'app-area-list',
+  standalone: true,
   imports: [
     ButtonModule,
     DropDownListModule
@@ -21,11 +22,8 @@ export class AreaList implements OnInit {
   areasUpdated = output<void>();
   selectedArea: ModelSignal<number> = model.required<number>();
 
-  // maps the appropriate column to fields property
   public fields: FieldSettingsModel = {text: 'name', value: 'name'};
-  // set the height of the popup element
   public height: string = '220px';
-  // the default value in dropdown
   public waterMark: string = 'Wähle ein Material aus:';
   public debounceDelay: number = 300;
   public filterPlaceholder: string = 'Search';
@@ -41,26 +39,28 @@ export class AreaList implements OnInit {
     this.setBorderColor();
   }
 
-  setBorderColor() {
+  setBorderColor(): void {
     let cardList = document.getElementsByClassName("e-card");
     for (let i = 0; i < cardList.length; i++) {
-      (cardList[i] as HTMLElement).style = `border-color = ${this.areas[i].color}`;
+      if (this.areas[i]) {
+        (cardList[i] as HTMLElement).style.borderColor = this.areas[i].color;
+      }
     }
   }
 
-  addLayer(area: Area) {
+  addLayer(area: Area): void {
     const lastLayer = area.layers[area.layers.length - 1];
     let id = 0;
     if (lastLayer) {
       id = lastLayer.id + 1;
     }
-    area.layers.push({id: id, name: `Neue Schicht ${id}`, material: null, depth: 0.1})
+    area.layers.push({id: id, name: `Schicht ${id}`, material: null, depth: 0.1});
   }
 
   calculateCost(area: Area): number {
     let cost = 0;
     for (let i = 0; i < area.layers.length; i++) {
-      cost += this.calculateLayerCost(area, area.layers[i])
+      cost += this.calculateLayerCost(area, area.layers[i]);
     }
     return cost;
   }
@@ -70,21 +70,27 @@ export class AreaList implements OnInit {
     let cost = 0;
     if (material) {
       switch (material.unit) {
-        default:
+        case MaterialUnit.EURO_PER_SQUARE_METER:
           cost = material.price * area.size;
           break;
         case MaterialUnit.EURO_PER_CUBIC_METER:
           cost = area.size * layer.depth * material.price;
           break;
         case MaterialUnit.EURO_PER_LITER:
-          cost = area.size * layer.depth * 1000 * material.price; // 1m^3 = 1000l
+          cost = area.size * layer.depth * 1000 * material.price;
+          break;
+        case MaterialUnit.EURO_PER_METER:
+          cost = material.price * area.size;
+          break;
+        default:
+          cost = material.price * area.size;
           break;
       }
     }
     return cost;
   }
 
-  deleteArea(area: Area) {
+  deleteArea(area: Area): void {
     const areaIndex = this.areas.indexOf(area);
     if (areaIndex > -1) {
       this.areas.splice(areaIndex, 1);
@@ -92,49 +98,47 @@ export class AreaList implements OnInit {
     this.areasUpdated.emit();
   }
 
-  deleteLayer(area: Area, layer: Layer) {
+  deleteLayer(area: Area, layer: Layer): void {
     const layerIndex = area.layers.indexOf(layer);
     if (layerIndex > -1) {
       area.layers.splice(layerIndex, 1);
     }
   }
 
-  onAreaNameChange($event: Event, area: Area) {
-    const data = (($event as InputEvent).target as HTMLInputElement).value;
+  onAreaNameChange(event: Event, area: Area): void {
+    const data = ((event as InputEvent).target as HTMLInputElement).value;
     if (area && data) {
       area.name = data;
     }
     this.areasUpdated.emit();
   }
 
-  onLayerNameChange(event: Event, area: Area, layer: Layer) {
+  onLayerNameChange(event: Event, area: Area, layer: Layer): void {
     const data = ((event as InputEvent).target as HTMLInputElement).value;
     if (layer && data) {
       layer.name = data;
     }
   }
 
-  onLayerDepthChange(event: Event, area: Area, layer: Layer) {
+  onLayerDepthChange(event: Event, area: Area, layer: Layer): void {
     const data = ((event as InputEvent).target as HTMLInputElement).value;
     if (layer && data) {
       layer.depth = parseFloat(data) / 100;
     }
   }
 
-  onLayerTypeDropdownChange($event: any, layer: Layer) {
-    layer.material = ($event as ChangeEventArgs).value as MaterialDto;
-    layer.name = layer.name + " " + layer.material.name;
+  onLayerTypeDropdownChange(event: ChangeEventArgs, layer: Layer): void {
+    layer.material = event.value as MaterialDto;
   }
 
-  onFiltering($event: any) {
-
+  onFiltering(event: any): void {
   }
 
-  onSelectArea(area: Area) {
+  onSelectArea(area: Area): void {
     this.selectedArea.update(() => this.areas.indexOf(area));
   }
 
   isAreaSelected(area: Area): boolean {
-    return this.selectedArea() == this.areas.indexOf(area);
+    return this.selectedArea() === this.areas.indexOf(area);
   }
 }
