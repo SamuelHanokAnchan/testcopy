@@ -275,7 +275,6 @@
 
 @supports (-webkit-appearance: none) {
   .btn {
-    -webkit-appearance: none;
     -webkit-tap-highlight-color: transparent;
   }
 
