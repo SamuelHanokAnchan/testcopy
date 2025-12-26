@@ -46,6 +46,17 @@ export class MaterialPlanningCalculate implements OnInit, AfterViewInit {
   stateHistory: StateSnapshot[] = [];
   isEditMode: boolean = false;
   selectedPointIndex: number = -1;
+  zoomLevel: number = 1;
+  panX: number = 0;
+  panY: number = 0;
+  isMouseDown: boolean = false;
+  lastMouseX: number = 0;
+  lastMouseY: number = 0;
+  mouseDownTime: number = 0;
+  dragThreshold: number = 10;
+  isDragging: boolean = false;
+  isPanMode: boolean = false;
+  holdTimeThreshold: number = 500;
 
   private tooltip: HTMLDivElement | null = null;
   private currentHoveredAreaId: number | null = null;
@@ -109,11 +120,37 @@ export class MaterialPlanningCalculate implements OnInit, AfterViewInit {
     this.setSelectionMode(AreaMode.MANUAL);
 
     this.canvas.addEventListener('mousemove', (event: MouseEvent) => {
-      this.onCanvasHover(event);
+      if (this.isMouseDown && this.zoomLevel > 1) {
+        const deltaX = Math.abs(event.clientX - this.lastMouseX);
+        const deltaY = Math.abs(event.clientY - this.lastMouseY);
+        
+        // Only pan if moved more than threshold
+        if (deltaX > this.dragThreshold || deltaY > this.dragThreshold) {
+          this.isPanMode = true;
+          this.isDragging = true;
+          this.onCanvasPan(event);
+        }
+      } else if (!this.isMouseDown) {
+        this.isPanMode = false;
+        this.onCanvasHover(event);
+      }
     });
 
     this.canvas.addEventListener('mouseleave', () => {
       this.hideTooltip();
+      this.isMouseDown = false;
+    });
+
+    this.canvas.addEventListener('mousedown', (event: MouseEvent) => {
+      this.isMouseDown = true;
+      this.lastMouseX = event.clientX;
+      this.lastMouseY = event.clientY;
+      this.mouseDownTime = Date.now();
+    });
+
+    this.canvas.addEventListener('mouseup', () => {
+      this.isMouseDown = false;
+      this.isDragging = false;
     });
 
     window.addEventListener('resize', () => {
@@ -130,20 +167,29 @@ export class MaterialPlanningCalculate implements OnInit, AfterViewInit {
 
   private getCanvasCoordinates(event: MouseEvent): [number, number] {
     const rect = this.canvas.getBoundingClientRect();
-    const x = (event.clientX - rect.left) * this.canvasScaleX;
-    const y = (event.clientY - rect.top) * this.canvasScaleY;
+    const x = ((event.clientX - rect.left) * this.canvasScaleX - this.panX) / this.zoomLevel;
+    const y = ((event.clientY - rect.top) * this.canvasScaleY - this.panY) / this.zoomLevel;
     return [x, y];
   }
 
   drawImage(): void {
     this.resize(this.rawImg.width, this.rawImg.height);
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    
+    this.context.save();
+    this.context.translate(this.panX, this.panY);
+    this.context.scale(this.zoomLevel, this.zoomLevel);
     this.context?.drawImage(this.rawImg, 0, 0, this.rawImg.width, this.rawImg.height);
+    this.context.restore();
   }
 
   drawScene(): void {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.drawImage();
+    
+    this.context.save();
+    this.context.translate(this.panX, this.panY);
+    this.context.scale(this.zoomLevel, this.zoomLevel);
     
     for (let i = 0; i < this.areas.length; i++) {
       let area = this.areas[i];
@@ -171,6 +217,8 @@ export class MaterialPlanningCalculate implements OnInit, AfterViewInit {
         this.context.stroke();
       }
     }
+    
+    this.context.restore();
   }
 
   resize(width: number, height: number): void {
@@ -190,6 +238,14 @@ export class MaterialPlanningCalculate implements OnInit, AfterViewInit {
 
     if (this.isEditMode) {
       this.selectPointToEdit(x, y);
+      return;
+    }
+
+    // Check if this was a quick click (less than holdTimeThreshold) after dragging
+    const holdTime = Date.now() - this.mouseDownTime;
+    
+    // If user dragged (isPanMode) or held for less than threshold, don't create point
+    if (this.isPanMode || (this.isMouseDown && holdTime < this.holdTimeThreshold)) {
       return;
     }
 
@@ -357,8 +413,52 @@ export class MaterialPlanningCalculate implements OnInit, AfterViewInit {
     this.drawScene();
   }
 
+  zoomIn(): void {
+    if (this.zoomLevel < 3) {
+      this.zoomLevel += 0.2;
+      this.drawScene();
+    }
+  }
+
+  zoomOut(): void {
+    if (this.zoomLevel > 0.5) {
+      this.zoomLevel -= 0.2;
+      this.drawScene();
+    }
+  }
+
+  resetZoom(): void {
+    this.zoomLevel = 1;
+    this.panX = 0;
+    this.panY = 0;
+    this.drawScene();
+  }
+
+  private onCanvasPan(event: MouseEvent): void {
+    const deltaX = event.clientX - this.lastMouseX;
+    const deltaY = event.clientY - this.lastMouseY;
+    
+    this.panX += deltaX;
+    this.panY += deltaY;
+    
+    // Enforce boundaries to prevent panning beyond image edges
+    const maxPanX = 0;
+    const minPanX = -(this.rawImg.width * this.zoomLevel - this.canvas.width);
+    const maxPanY = 0;
+    const minPanY = -(this.rawImg.height * this.zoomLevel - this.canvas.height);
+    
+    // Clamp pan values
+    this.panX = Math.min(maxPanX, Math.max(minPanX, this.panX));
+    this.panY = Math.min(maxPanY, Math.max(minPanY, this.panY));
+    
+    this.lastMouseX = event.clientX;
+    this.lastMouseY = event.clientY;
+    
+    this.drawScene();
+  }
+
   private selectPointToEdit(x: number, y: number): void {
-    const clickRadius = 40;
+    const clickRadius = 20;
     
     for (let i = 0; i < this.clickedPoints.length; i++) {
       const distance = Math.sqrt(

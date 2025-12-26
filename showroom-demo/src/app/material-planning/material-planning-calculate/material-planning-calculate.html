@@ -47,6 +47,7 @@
       <canvas 
         #canvasElement
         (click)="onCanvasClick($event)" 
+        [class.pan-mode]="isPanMode && zoomLevel > 1"
         class="drawing-canvas">
       </canvas>
     </div>
@@ -55,6 +56,25 @@
       <button (click)="exportPdf()" class="btn btn-success">
         PDF exportieren
       </button>
+      <div class="zoom-buttons">
+        <button 
+          (click)="zoomOut()"
+          class="btn btn-zoom">
+          −
+        </button>
+        <span class="zoom-level">{{ (zoomLevel * 100).toFixed(0) }}%</span>
+        <button 
+          (click)="zoomIn()"
+          class="btn btn-zoom">
+          +
+        </button>
+        <button 
+          (click)="resetZoom()"
+          class="btn btn-zoom"
+          title="Zoom zurücksetzen">
+          ⟲
+        </button>
+      </div>
     </div>
   </div>
 

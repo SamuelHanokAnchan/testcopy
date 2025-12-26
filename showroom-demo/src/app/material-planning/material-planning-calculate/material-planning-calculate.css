@@ -149,6 +149,14 @@
   touch-action: none;
 }
 
+.drawing-canvas.pan-mode {
+  cursor: grab;
+}
+
+.drawing-canvas.pan-mode:active {
+  cursor: grabbing;
+}
+
 .drawing-canvas:hover {
   border-color: #cbd5e1;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
@@ -160,6 +168,44 @@
   border-top: 1px solid #e2e8f0;
   display: flex;
   gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.zoom-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn-zoom {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 6px;
+  background: white;
+  color: #64748b;
+  border: 1px solid #cbd5e1;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.btn-zoom:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+}
+
+.zoom-level {
+  min-width: 50px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748b;
 }
 
 .sidebar-section {
